@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(cuid())
+  name     String?
+  username String  @unique
+  email    String? @unique
+  role     String? @default("user")
+  active   Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  password  Password?
+
+  workspacesOwned Workspace[] @relation("WorkspaceOwner")
+  workspaces      Workspace[] @relation("WorkspaceMembers")
+
+  pages            Page[]
+  tasks            Task[]
+  tasksCompletedBy Task[] @relation("TaskCompletedBy")
+  tasksAssignedTo  Task[] @relation("TaskAssignees")
+}
+
+model Password {
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+}
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  owner       User     @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ownerId     String
+  members     User[]   @relation("WorkspaceMembers")
+  pages       Page[]
+}
+
+model Page {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  type        String?   @default("Documents") // Documents, Kanban, Calendar, Spreadsheet, Presentation, Mindmap, Diagram, Project, Database, Code, Notes
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ownerId     String
+  tasks       Task[]
+
+  @@index([workspaceId], name: "workspaceId")
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  assignees     User[]  @relation("TaskAssignees")
+  completedBy   User?   @relation("TaskCompletedBy", fields: [completedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  completedById String?
+  owner         User    @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ownerId       String
+  page          Page    @relation(fields: [pageId], references: [id])
+  pageId        String
+
+  @@index([pageId], name: "pageId")
+  @@index([ownerId], name: "ownerId")
+}
