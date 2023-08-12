@@ -1,10 +1,7 @@
 import '../globals.css'
 
-import { cookies } from 'next/dist/client/components/headers'
-import { redirect } from 'next/navigation'
 import { ThemeProvider, ThemeToggle } from '~/components/theme-provider'
 import { Toaster } from '~/components/ui/toaster'
-import { SessionProvider } from 'next-auth/react'
 
 export default function RootLayout({
 	children,

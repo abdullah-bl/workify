@@ -1,19 +1,17 @@
-import { GearIcon, PersonIcon } from '@radix-ui/react-icons'
 import { notFound } from 'next/navigation'
 import {
 	CreatePageForm,
 	DeleteWorkspaceDialog,
 	EditWorkspaceForm,
 } from '~/components/forms'
-
 import Search from '~/components/search'
-import { Button } from '~/components/ui/button'
 import { getWorkspace } from '~/lib/workspaces'
 import ListPages from '~/components/pages/list-pages'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '~/lib/auth'
 import WorkspaceMembers from '~/components/users/workspace-members'
 import { getUsers } from '~/lib/users'
+import type { User } from '@prisma/client'
 
 export default async function WorkspaceDetails({
 	params: { workspaceId },
@@ -52,7 +50,7 @@ export default async function WorkspaceDetails({
 						members={workspace.members}
 						ownerId={workspace.ownerId}
 						isOwner={user?.id === workspace.ownerId}
-						users={users.filter((u) => u.id !== workspace.ownerId)}
+						users={users.filter((u: User) => u.id !== workspace.ownerId)}
 					/>
 					{user?.id === workspace.owner.id && (
 						<>

@@ -3,8 +3,6 @@
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import { revalidate_path } from '~/lib/actions'
-import { client } from '~/client'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { useToast } from '~/components/ui/use-toast'

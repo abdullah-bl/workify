@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server"
 import { prisma } from "~/lib/prisma"
 
 
@@ -17,7 +18,5 @@ export const GET = async (req: Request) => {
       name: true,
     }
   })
-  return new Response(JSON.stringify(users), {
-    headers: { "content-type": "application/json" },
-  })
+  return NextResponse.json(users)
 }

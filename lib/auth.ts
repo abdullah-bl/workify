@@ -1,20 +1,9 @@
-// import type { User } from "~/types";
-
-// import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
-
-// import { client } from "../client";
-
-
-
 import { User } from "@prisma/client";
 import { prisma } from "./prisma";
 import { compare } from "bcryptjs";
 import type { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import GitHubProvider from "next-auth/providers/github";
-// import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email"
-import { redirect } from "next/dist/server/api-utils";
+// import EmailProvider from "next-auth/providers/email"
 
 
 export const authOptions: NextAuthOptions = {
@@ -114,24 +103,3 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-
-
-// /**
-//  * Can be called in page/layout server component.
-//  * @param cookies ReadonlyRequestCookies
-//  * @returns User or null
-//  * @author Arif "poltang" Muslax
-//  * @see {@link https://github.com/vvo/iron-session/issues/560#issuecomment-1324598048}
-//  */
-// function getUserFromCookie(cookies: ReadonlyRequestCookies): User | null {
-//   const authCookie = cookies.get("pb_auth");
-
-//   if (!authCookie) return null;
-
-//   client.authStore.loadFromCookie(`${authCookie.name}=${authCookie.value}`);
-//   const user = client.authStore.model;
-
-//   return user as unknown as User;
-// }
-
-// export { getUserFromCookie };
